@@ -5,9 +5,9 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "astro check && astro build",
+    "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro",
+    "check": "astro check",
     "format": "prettier --plugin=prettier-plugin-astro --write",
     "format:check": "prettier --plugin=prettier-plugin-astro --check",
     "lint": "eslint --cache --cache-strategy content"
