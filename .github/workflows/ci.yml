@@ -68,3 +68,14 @@ jobs:
       - name: Type check
         if: ${{ always() }}
         run: npm run check
+
+      - name: Build
+        run: npm run build
+
+      - name: Deploy
+        uses: dswistowski/surge-sh-action@v1
+        with:
+          domain: "owanturist.me"
+          project: "./dist"
+          login: ${{ secrets.SURGE_LOGIN }}
+          token: ${{ secrets.SURGE_TOKEN }}
