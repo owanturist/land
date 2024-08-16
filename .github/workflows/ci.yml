@@ -71,12 +71,12 @@ jobs:
 
       - name: Build the project
         if: ${{ always() }}
-        run: npm run build -- --site ${{ env.WEBSITE_ADDRESS }}
+        run: npm run build -- --site ${{ vars.WEBSITE_ADDRESS }}
 
       - name: Deploy
         uses: dswistowski/surge-sh-action@v1
         with:
-          domain: ${{ env.WEBSITE_ADDRESS }}
+          domain: ${{ vars.WEBSITE_ADDRESS }}
           project: "./dist"
           login: ${{ secrets.SURGE_LOGIN }}
           token: ${{ secrets.SURGE_TOKEN }}
