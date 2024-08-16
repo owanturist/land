@@ -74,6 +74,7 @@ jobs:
         run: npm run build -- --site ${{ vars.WEBSITE_ADDRESS }}
 
       - name: Deploy
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
         uses: dswistowski/surge-sh-action@v1
         with:
           domain: ${{ vars.WEBSITE_ADDRESS }}
