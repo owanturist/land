@@ -1,0 +1,83 @@
+name: CI
+
+on:
+  pull_request:
+    paths-ignore:
+      - "**.md"
+
+  push:
+    branches:
+      - master
+
+env:
+  CI: true
+
+jobs:
+  pipeline:
+    name: Checks
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install Node
+        uses: actions/setup-node@v3
+        with:
+          node-version-file: .nvmrc
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci --prefer-offline --no-audit --no-fund --legacy-peer-deps
+
+      - name: Detect file changes
+        id: changed-files
+        uses: tj-actions/changed-files@v41
+        with:
+          files_yaml: |
+            eslint_config:
+              - eslint.config.mjs
+              - package-lock.json
+            eslint_target:
+              - "**/*.{ts,tsx,js,jsx}"
+            prettier_config:
+              - prettier.config.mjs
+              - .prettierignore
+              - package-lock.json
+            prettier_target:
+              - "**/*.*"
+
+      - name: Check all fiels formatting
+        id: format-all
+        if: ${{ github.event_name == 'push' || steps.changed-files.outputs.prettier_config_any_changed == 'true' }}
+        run: npm run format:check .
+
+      - name: Check changed fiels formatting
+        if: ${{ steps.format-all.outcome == 'skipped' && steps.changed-files.outputs.prettier_target_any_changed == 'true' }}
+        run: npm run format:check --no-error-on-unmatched-pattern ${{ steps.changed-files.outputs.prettier_target_all_changed_files }}
+
+      - name: Lint all files
+        id: lint-all
+        if: ${{ github.event_name == 'push' || steps.changed-files.outputs.eslint_config_any_changed == 'true' }}
+        run: npm run lint .
+
+      - name: Lint changed files
+        if: ${{ steps.lint-all.outcome == 'skipped' && steps.changed-files.outputs.eslint_target_any_changed == 'true' }}
+        run: npm run lint ${{ steps.changed-files.outputs.eslint_target_all_changed_files }} --no-error-on-unmatched-pattern
+
+      - name: Type check
+        if: ${{ always() }}
+        run: npm run check
+
+      - name: Build the project
+        if: ${{ always() }}
+        run: npm run build
+
+      - name: Deploy
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        uses: dswistowski/surge-sh-action@v1
+        with:
+          domain: "owanturist.me"
+          project: "./dist"
+          login: ${{ secrets.SURGE_LOGIN }}
+          token: ${{ secrets.SURGE_TOKEN }}
