@@ -23,7 +23,7 @@
     "@eslint/compat": "^1.1.1",
     "@eslint/js": "^9.9.0",
     "@tailwindcss/typography": "^0.5.14",
-    "@typescript-eslint/parser": "^8.1.0",
+    "@typescript-eslint/parser": "^8.3.0",
     "astro-robots-txt": "^1.0.0",
     "astro-webmanifest": "^1.0.0",
     "eslint": "^9.9.0",
