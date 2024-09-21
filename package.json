@@ -26,7 +26,7 @@
     "@typescript-eslint/parser": "^8.1.0",
     "astro-robots-txt": "^1.0.0",
     "astro-webmanifest": "^1.0.0",
-    "eslint": "^9.9.0",
+    "eslint": "^9.11.0",
     "eslint-plugin-astro": "^1.2.3",
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-unused-imports": "^4.1.3",
